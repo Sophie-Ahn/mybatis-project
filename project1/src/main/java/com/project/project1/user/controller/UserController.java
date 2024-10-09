@@ -1,27 +1,36 @@
 package com.project.project1.user.controller;
 
-import com.project.project1.user.dto.CreateUserDto;
+import com.project.project1.user.dto.JoinResponseDto;
+import com.project.project1.user.dto.JoinUserDto;
+import com.project.project1.user.exception.GlobalException;
 import com.project.project1.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createUser(@RequestBody CreateUserDto createUserDto) throws BadRequestException {
-            userService.join(createUserDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 됐다.");
+    @PostMapping("/join")
+    public ResponseEntity<JoinResponseDto> joinUser(JoinUserDto joinUserDto, @RequestPart (value = "multipartFile")MultipartFile image) throws GlobalException, IOException {
+            JoinResponseDto dto = userService.join(joinUserDto, image);
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 
-    @ExceptionHandler(BadRequestException.class)
-    public String handleException(Exception e) {
-        return e.getMessage();
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody LoginUserDto loginUserDto) throws BadRequestException {
+//        String nickname = userService.login(loginUserDto);
+//        return ResponseEntity.status(HttpStatus.ACCEPTED).body(nickname + " 로그인 완료");
+//    }
+//
+//    @ExceptionHandler(BadRequestException.class)
+//    public String handleException(Exception e) {
+//        return e.getMessage();
+//    }
 }

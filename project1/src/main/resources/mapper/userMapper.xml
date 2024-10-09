@@ -3,10 +3,11 @@
 <!--        "http://mybatis.org/dtd/mybatis-3-config.dtd">-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.project1.user.dao.UserMapper">
-    <insert id="saveUser" parameterType="User">
+    <insert id="saveUser" parameterType="User" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
         INSERT INTO user
-        (user.user_id, user.user_password, user.user_name, user.nickname, user.phone_num)
-        VALUES (#{userId}, #{userPassword}, #{userName}, #{nickname}, #{phoneNum})
+        (user_id, password, username, address, detail_address, zipcode, phone_num, grade, delete_yn, lock_yn, failcnt, cre_date)
+        VALUES (#{userId}, #{password}, #{username}, #{address}, #{detailAddress}, #{zipcode}, #{phoneNum}, #{grade}, #{deleteYn}, #{lockYn}, #{failcnt}, #{creDate})
     </insert>
 
     <select id="getUserByUserId" parameterType="String" resultType="int">
@@ -17,7 +18,8 @@
     </select>
 
     <select id="findUserById" parameterType="String" resultType="String">
-        select *
+<!--            resultType="com.project.project1.user.vo.User"-->
+        select nickname
         from user
         where user_id = #{userId}
         and user_password = #{userPassword}
